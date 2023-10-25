@@ -5,9 +5,14 @@
                 <h1>House Details</h1>
             </div>
         </section>
-        <section if="house" class="row">
-            <div>
-                <h3>{{ house }}</h3>
+        <section if="house" class="row bg-light rounded shadow">
+            <div class="col-md-5">
+                <img class="img-fluid" :src="house.imgUrl" :alt="house.creator.name">
+            </div>
+            <div class="col-md-7">
+                <img class="creator" :src="house.creator.picture" :alt="house.creator.name">
+                <h3>{{ house.bedrooms }} bed {{ house.bathrooms }} bath. For ${{ house.price }} </h3>
+                <h4>Listed by {{ house.creator.name }} on {{ house.createdAt.toLocaleString() }}</h4>
             </div>
         </section>
     </div>
@@ -51,4 +56,10 @@ export default {
 </script>
 
 
-<style lang="scss" scoped></style>
+<style lang="scss" scoped>
+.creator {
+    height: 10vh;
+    width: 10vh;
+    border-radius: 50%;
+}
+</style>
