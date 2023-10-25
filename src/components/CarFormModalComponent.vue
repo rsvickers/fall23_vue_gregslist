@@ -3,11 +3,12 @@
     <div class="modal-dialog">
       <div class="modal-content">
         <div class="modal-header">
-          <h1 class="modal-title fs-5" id="exampleModalLabel">Create Car</h1>
+          <h1 v-if="!editable.id" class="modal-title fs-5" id="exampleModalLabel">Create Car</h1>
+          <h1 v-else class="modal-title fs-5" id="exampleModalLabel">Edit Car</h1>
           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
         <div class="modal-body">
-          <form @submit.prevent="createCar()">
+          <form @submit.prevent="handleSubmit()">
             <div class="mb-3">
               <label for="make" class="form-label">Car Make</label>
               <input v-model="editable.make" type="text" class="form-control" id="make" required maxlength="500">
@@ -57,14 +58,27 @@
 
 
 <script>
-import { ref } from 'vue';
+import { ref, watchEffect } from 'vue';
 import Pop from '../utils/Pop.js';
 import { carsService } from '../services/CarsService.js';
 import { Modal } from 'bootstrap';
+import { AppState } from '../AppState.js';
+import { logger } from '../utils/Logger.js';
 
 export default {
   setup() {
     const editable = ref({})
+
+    watchEffect(() => {
+      if (AppState.activeCar) {
+        editable.value = { ...AppState.activeCar }
+        logger.log('WATCH')
+      }
+      else {
+        editable.value = {}
+
+      }
+    })
     return {
       editable,
       engineTypes: [
@@ -80,6 +94,14 @@ export default {
         "large",
         "chuncko"
       ],
+      handleSubmit() {
+        if (!editable.value.id) {
+          this.createCar()
+        }
+        else {
+          this.editCar()
+        }
+      },
       async createCar() {
         try {
           const carData = editable.value
@@ -87,6 +109,15 @@ export default {
           // NOTE clears form
           editable.value = {}
           // NOTE closes modal
+          Modal.getOrCreateInstance('#carFormModal').hide()
+        } catch (error) {
+          Pop.error(error)
+        }
+      },
+      async editCar() {
+        try {
+          const carData = editable.value
+          await carsService.editCar(carData)
           Modal.getOrCreateInstance('#carFormModal').hide()
         } catch (error) {
           Pop.error(error)

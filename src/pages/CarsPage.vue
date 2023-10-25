@@ -4,7 +4,7 @@
       <div class="col-12 p-4">
         <h1>
           <span>This is the cars page!</span>
-          <button class="btn fs-2 ms-3" type="button" title="Open Car Form" data-bs-toggle="modal"
+          <button v-if="account.id" class="btn fs-2 ms-3" type="button" title="Open Car Form" data-bs-toggle="modal"
             data-bs-target="#carFormModal">
             🚗
           </button>
@@ -42,10 +42,12 @@ export default {
       }
     }
     onMounted(() => {
+      carsService.clearData()
       getCars();
     });
     return {
-      cars: computed(() => AppState.cars)
+      cars: computed(() => AppState.cars),
+      account: computed(() => AppState.account)
     };
   },
   components: { CarFormModalComponent, CarCardComponent }

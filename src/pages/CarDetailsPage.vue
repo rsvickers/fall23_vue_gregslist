@@ -16,6 +16,10 @@
         <h3>${{ car.price }}</h3>
         <h4>Engine: {{ car.engineType }}</h4>
         <p>{{ car.description }}</p>
+        <div v-if="car.creatorId == account.id">
+          <button @click="destroyCar()" class="btn btn-danger">Delete Car</button>
+          <button data-bs-toggle="modal" data-bs-target="#carFormModal" class="btn btn-info ms-3">Edit Car</button>
+        </div>
       </div>
     </section>
     <section v-else class="row">
@@ -24,6 +28,7 @@
       </div>
     </section>
   </div>
+  <CarFormModalComponent />
 </template>
 
 
@@ -32,32 +37,51 @@ import { computed, onMounted } from 'vue';
 import { AppState } from '../AppState.js';
 import Pop from '../utils/Pop.js';
 import { carsService } from '../services/CarsService.js';
-import { useRoute } from 'vue-router';
+import { useRoute, useRouter } from 'vue-router';
 import { logger } from '../utils/Logger.js';
+import CarFormModalComponent from '../components/CarFormModalComponent.vue';
 
 export default {
   setup() {
     // NOTE gives us information about our current route, and can access properties from the url
-    const route = useRoute()
-
+    const route = useRoute();
+    // NOTE router allows us to change what the current route looks like
+    const router = useRouter();
     async function getCarById() {
       try {
-        const carId = route.params.carId
-        await carsService.getCarById(carId)
-      } catch (error) {
-        Pop.error(error)
+        const carId = route.params.carId;
+        await carsService.getCarById(carId);
+      }
+      catch (error) {
+        Pop.error(error);
       }
     }
-
     onMounted(() => {
-      logger.log('CAR ID FROM ROUTE', route.params.carId)
-      carsService.clearData()
-      getCarById()
-    })
+      logger.log('CAR ID FROM ROUTE', route.params.carId);
+      carsService.clearData();
+      getCarById();
+    });
     return {
-      car: computed(() => AppState.activeCar)
-    }
-  }
+      car: computed(() => AppState.activeCar),
+      account: computed(() => AppState.account),
+      async destroyCar() {
+        try {
+          // const carId = AppState.activeCar.id
+          const wantsToDelete = await Pop.confirm('Are you sure you want to do that?');
+          if (!wantsToDelete) {
+            return;
+          }
+          const carId = route.params.carId;
+          await carsService.destroyCar(carId);
+          router.push({ name: 'Cars' });
+        }
+        catch (error) {
+          Pop.error(error);
+        }
+      }
+    };
+  },
+  components: { CarFormModalComponent }
 }
 </script>
 

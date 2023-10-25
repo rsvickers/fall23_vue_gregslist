@@ -25,6 +25,19 @@ class CarsService {
     AppState.cars.push(newCar)
   }
 
+  async destroyCar(carId) {
+    const res = await api.delete(`api/cars/${carId}`)
+    logger.log('DESTROYED CAR', res.data)
+    this.clearData()
+  }
+
+  async editCar(carData) {
+    const res = await api.put(`api/cars/${carData.id}`, carData)
+    logger.log('EDITED CAR', res.data)
+    const newCar = new Car(res.data)
+    AppState.activeCar = newCar
+  }
+
   clearData() {
     AppState.activeCar = null
   }
