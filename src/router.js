@@ -20,7 +20,11 @@ const routes = [
     path: '/cars',
     name: 'Cars',
     component: loadPage('CarsPage')
-
+  },
+  {
+    path: '/cars/:carId',
+    name: 'CarDetails',
+    component: loadPage('CarDetailsPage')
   },
   {
     path: '/account',

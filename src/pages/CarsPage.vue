@@ -6,8 +6,8 @@
       </div>
     </section>
     <section class="row">
-      <div v-for="car in cars" :key="car.id" class="col-12">
-        {{ car.make }} {{ car.model }}
+      <div v-for="car in cars" :key="car.id" class="col-md-6 p-4">
+        <CarCardComponent :carProp="car" />
       </div>
     </section>
   </div>
@@ -21,6 +21,7 @@ import { carsService } from '../services/CarsService.js'
 import { AppState } from '../AppState.js'
 
 export default {
+  // NOTE no props on pages
   setup() {
     async function getCars() {
       try {
