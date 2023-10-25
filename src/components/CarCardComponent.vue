@@ -1,5 +1,6 @@
 <template>
-  <router-link @click="setActiveCar(carProp)" :to="{ name: 'CarDetails', params: { carId: carProp.id } }">
+  <!-- NOTE the CarDetails route in our router.js has a required parameter, so we have to specify its value here in our :to object -->
+  <router-link :to="{ name: 'CarDetails', params: { carId: carProp.id } }">
     <section class="row rounded bg-light shadow">
       <div class="col-md-4 p-0">
         <img class="img-fluid rounded-start" :src="carProp.imgUrl" :alt="carProp.make + ' ' + carProp.model">
@@ -24,9 +25,10 @@ export default {
   },
   setup() {
     return {
-      setActiveCar(car) {
-        AppState.activeCar = car
-      }
+      // NOTE not going to work well, we'll use our id from our route instead
+      // setActiveCar(car) {
+      //   AppState.activeCar = car
+      // }
     }
   }
 }
