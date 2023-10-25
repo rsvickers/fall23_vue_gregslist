@@ -34,10 +34,12 @@ export default {
             }
         }
         onMounted(() => {
+            housesService.clearData()
             getHouses();
         });
         return {
-            houses: computed(() => AppState.houses)
+            houses: computed(() => AppState.houses),
+            account: computed(() => AppState.account)
         };
     },
     components: { HouseCardComponent }

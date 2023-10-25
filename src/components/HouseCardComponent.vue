@@ -20,7 +20,7 @@ import { House } from '../models/House.js';
 export default {
 
     props: {
-        houseProp: { type: House, required: true },
+        houseProp: { type: House },
     },
 
     setup() {

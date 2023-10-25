@@ -16,7 +16,7 @@ class HousesService {
         const res = await api.get(`api/houses/${houseId}`)
         // logger.log('Got house you silly goose', res.data)
         const newHouse = new House(res.data)
-        AppState.houses.push(newHouse)
+        AppState.activeHouse = newHouse
     }
 
 
