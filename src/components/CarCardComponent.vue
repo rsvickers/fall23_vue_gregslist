@@ -15,7 +15,6 @@
 
 
 <script>
-import { AppState } from '../AppState.js';
 import { Car } from '../models/Car.js';
 
 
